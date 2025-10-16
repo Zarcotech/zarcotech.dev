@@ -82,6 +82,10 @@ app.get('/', (req, res) => {
     res.sendFile(join(__dirname, 'public', 'index.html'))
 })
 
+app.get('/api/status', (req, res) => {
+  res.send(status);
+})
+
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`);
 });
