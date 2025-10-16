@@ -20,7 +20,7 @@ const __dirname = join(__filename, '..');
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
-    const userId = '832829834838749';
+    const userId = '1010986151374499890';
     const user = await client.users.fetch(userId);
 
 });
@@ -28,7 +28,7 @@ client.on('ready', async () => {
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
-    const userId = '832829834838749';
+    const userId = '1010986151374499890';
     const user = await client.users.fetch(userId);
 
     if (user && user.presence) {
@@ -40,10 +40,12 @@ client.on('ready', async () => {
     }
 });
 
+client.login('MTQyODE4Mzc4MjE3MDU2MjYyMA.Gl6N4a.Kivszyf2sNPxqo1i31lmZYi6WEphCdOlTxOw1g');
+
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'public', 'index.html'))
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Listening at http://localhost:${port}`);
 });
