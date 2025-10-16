@@ -17,31 +17,42 @@ const port = 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = join(__filename, '..');
 
-client.on('ready', async () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+// client.on('ready', async () => {
+//     console.log(`Logged in as ${client.user.tag}!`);
 
-    const userId = '832829834838749';
-    const user = await client.users.fetch(userId);
+//     const userId = '832829834838749';
+//     const user = await client.users.fetch(userId);
 
-});
+// });
 
-client.on('ready', async () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+let status = 'dnd';
 
-    const userId = '832829834838749';
-    const user = await client.users.fetch(userId);
+// client.on('ready', async () => {
+//     console.log(`Logged in as ${client.user.tag}!`);
 
-    if (user && user.presence) {
-        const userStatus = user.presence.status;
-        console.log(`User ${user.tag} status: ${userStatus}`);
-        // Possible statuses: 'online', 'idle', 'dnd', 'offline'
-    } else {
-        console.log(`Could not find presence information for user ${userId}.`);
-    }
-});
+//     const userId = '832829834838749';
+//     const user = await client.users.fetch(userId);
+
+//     if (user && user.presence) {
+//         const userStatus = user.presence.status;
+//         userStatus = status;
+//         console.log(`User ${user.tag} status: ${userStatus}`);
+//         // Possible statuses: 'online', 'idle', 'dnd', 'offline'
+//     } else {
+//         console.log(`Could not find presence information for user ${userId}.`);
+//     }
+// });
+
+// client.login('NzkyNzE1NDU0MTk2MDg4ODQy.X-hvzA.Ovy4MCQywSkoMRRclStW4xAYK7I');
+
+app.use(express.static(join(__dirname, 'public')))
 
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'public', 'index.html'))
+})
+
+app.get('/api/status', (req, res) => {
+  res.send(status);
 })
 
 app.listen(port, () => {
