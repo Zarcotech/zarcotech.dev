@@ -1,51 +1,87 @@
-import express  from 'express';
-import { join } from 'path';
-import { Client, GatewayIntentBits } from 'discord.js';
+import express from 'express';
+import { join, dirname } from 'path';
+import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.GuildPresences
-    ]
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildMembers
+    ],
+    partials: [Partials.User]
 });
 
 const app = express();
 const port = 5000;
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = join(__filename, '..');
+const __dirname = dirname(__filename);
 
-client.on('ready', async () => {
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+client.on('clientReady', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
-    const userId = '1010986151374499890';
-    const user = await client.users.fetch(userId);
+    // Give the Discord API a moment to send initial presence packets
+    await sleep(2000);
 
-});
+    for (const [guildId, guild] of client.guilds.cache) {
+        try {
+            await guild.members.fetch();
+        } catch (e) {
+            console.error(`Error fetching members for guild ${guild.name}:`, e.message);
+        }
+    }
 
-client.on('ready', async () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+    const userId = process.env.USER_ID;
+    console.log(`Attempting to fetch user ID: ${userId}`);
+    
+    if (!userId) {
+        console.error("Error: USER_ID environment variable is missing or failed to load.");
+        return;
+    }
 
-    const userId = '1010986151374499890';
-    const user = await client.users.fetch(userId);
+    try {
+        const user = await client.users.fetch(userId);
 
-    if (user && user.presence) {
-        const userStatus = user.presence.status;
+        let userStatus = 'Not Available (Check Intents/Cache)';
+
+        const guilds = client.guilds.cache;
+        let member = null;
+
+        for (const guild of guilds.values()) {
+            member = guild.members.cache.get(userId);
+            if (member) {
+                userStatus = member.presence?.status || 'Offline/Invisible (Cached)';
+                break; 
+            }
+        }
+        
         console.log(`User ${user.tag} status: ${userStatus}`);
-        // Possible statuses: 'online', 'idle', 'dnd', 'offline'
-    } else {
-        console.log(`Could not find presence information for user ${userId}.`);
+        
+    } catch (error) {
+        console.error(`Failed to fetch user or presence:`, error.message);
     }
 });
 
-client.login('MTQyODE4Mzc4MjE3MDU2MjYyMA.Gl6N4a.Kivszyf2sNPxqo1i31lmZYi6WEphCdOlTxOw1g');
+const token = process.env.BOT_TOKEN;
+
+if (!token) {
+    console.error("CRITICAL ERROR: BOT_TOKEN is missing. Please ensure your .env file is present and has BOT_TOKEN set correctly.");
+    process.exit(1);
+}
+
+client.login(token);
 
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'public', 'index.html'))
+    res.sendFile(join(__dirname, 'public', 'index.html'))
 })
 
 app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
+    console.log(`Listening at http://localhost:${port}`);
 });

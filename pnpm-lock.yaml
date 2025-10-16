@@ -17,6 +17,9 @@ importers:
       discord.js:
         specifier: ^14.23.2
         version: 14.23.2
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       express:
         specifier: ^5.1.0
         version: 5.1.0
@@ -188,6 +191,10 @@ packages:
 
   discord@0.8.2:
     resolution: {integrity: sha512-n8uOSuwvh+JLS3nrU/Jjom7TYX3jpAueTQ4NSQLf+SMsBZAjdzll4+zwYxxHxH7hvngmT12P0zP08dfHGh1xmQ==}
+
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+    engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -751,6 +758,8 @@ snapshots:
       glob: 11.0.3
       mootools: 1.5.2
       string-color: 0.8.0
+
+  dotenv@17.2.3: {}
 
   dunder-proto@1.0.1:
     dependencies:
