@@ -1,5 +1,5 @@
 import express from 'express';
-import { join, dirname } from 'path';
+import { join, dirname, resolve } from 'path'; // Added resolve here
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -22,12 +22,14 @@ const port = 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+
+
+
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 client.on('clientReady', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
-    // Give the Discord API a moment to send initial presence packets
     await sleep(2000);
 
     for (const [guildId, guild] of client.guilds.cache) {
@@ -78,13 +80,12 @@ if (!token) {
 
 client.login(token);
 
-app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, 'public', 'index.html'))
-})
+app.use(express.static(resolve(__dirname, 'public')));
 
-app.get('/api/status', (req, res) => {
-  res.send(status);
-})
+app.get('/', (req, res) => {
+    // Explicitly serve index.html
+    res.sendFile(join(__dirname, 'public', 'index.html'));
+});
 
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`);
