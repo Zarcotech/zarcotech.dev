@@ -5,10 +5,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const jsSnippets = [
-  "function", "const", "let", "var", "if", "else", "for",
-  "console.log('Cyber Salam FTC (#26903')", "document.getElementById()", "addEventListener()",
-  "setInterval()",
-  "true", "false", "null", "undefined", "new", "class", "this", "await", "async", "typeof scramjet"
+  "const", "let", "function", "if", "else", "return",
+  "await", "async", "true", "false", "null", "typeof"
 ];
 
 const fontSize = 16;
@@ -33,7 +31,7 @@ function draw() {
 
     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.985) {
       drops[i] = 0;
     }
 
@@ -51,7 +49,7 @@ window.addEventListener('resize', () => {
   }
 });
 
-setInterval(draw, 100);
+setInterval(draw, 150);
 
 function fetchAndUpdateStatus() {
   const activity = document.getElementById('activity');
@@ -147,5 +145,5 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   fetchAndUpdateStatus();
-  setInterval(fetchAndUpdateStatus, 5000);
+  setInterval(fetchAndUpdateStatus, 10000);
 });
