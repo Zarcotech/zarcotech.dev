@@ -1,6 +1,6 @@
 import express from 'express';
-import { join, dirname, resolve } from 'path'; // Added resolve here
-import { Client, GatewayIntentBits, Partials } from 'discord.js';
+import { join, dirname, resolve } from 'path'; 
+import { Client, GatewayIntentBits, Partials, ActivityType } from 'discord.js';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
@@ -22,52 +22,88 @@ const port = 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-
-
+let currentUserStatus = 'Loading...';
+let customStatusText = '';
+let spotifyData = null;
+const targetUserId = process.env.USER_ID;
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-client.on('clientReady', async () => {
-    console.log(`Logged in as ${client.user.tag}!`);
-
-    await sleep(2000);
-
-    for (const [guildId, guild] of client.guilds.cache) {
-        try {
-            await guild.members.fetch();
-        } catch (e) {
-            console.error(`Error fetching members for guild ${guild.name}:`, e.message);
-        }
-    }
-
-    const userId = process.env.USER_ID;
-    console.log(`Attempting to fetch user ID: ${userId}`);
-    
-    if (!userId) {
-        console.error("Error: USER_ID environment variable is missing or failed to load.");
+const updateStatusVariables = (presence) => {
+    if (!presence) {
+        currentUserStatus = 'Offline/Invisible';
+        customStatusText = '';
+        spotifyData = null;
         return;
     }
 
-    try {
-        const user = await client.users.fetch(userId);
+    currentUserStatus = presence.status || 'Offline/Invisible';
+    
+    const customActivity = presence.activities.find(
+        activity => activity.type === ActivityType.Custom
+    );
+    customStatusText = (customActivity && customActivity.state) ? customActivity.state : '';
+    
+    const spotifyActivity = presence.activities.find(
+        activity => activity.type === ActivityType.Listening && activity.name === 'Spotify'
+    );
+    
+    if (spotifyActivity) {
+        spotifyData = {
+            title: spotifyActivity.details,
+            artist: spotifyActivity.state,
+            album: spotifyActivity.assets?.largeText,
+            albumArtUrl: spotifyActivity.assets?.largeImage?.replace('spotify:', 'https://i.scdn.co/image/'),
+        };
+    } else {
+        spotifyData = null;
+    }
+    
+    console.log(`Live Update: Status: ${currentUserStatus}, Custom: ${customStatusText}, Spotify: ${!!spotifyData}`);
+};
 
-        let userStatus = 'Not Available (Check Intents/Cache)';
+app.get('/api/status', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.send({ status: currentUserStatus, customActivity: customStatusText, spotify: spotifyData }); 
+});
 
-        const guilds = client.guilds.cache;
-        let member = null;
+client.on('ready', async () => {
+    console.log(`Logged in as ${client.user.tag}!`);
 
-        for (const guild of guilds.values()) {
-            member = guild.members.cache.get(userId);
+    if (!targetUserId) {
+        console.error("Error: USER_ID environment variable is missing or failed to load.");
+        currentUserStatus = 'Config Error';
+        return;
+    }
+
+    currentUserStatus = 'Fetching Initial Presence...'; 
+    
+    await sleep(2000);
+
+    let foundMember = null;
+    for (const guild of client.guilds.cache.values()) {
+        try {
+            await guild.members.fetch(); 
+            const member = guild.members.cache.get(targetUserId);
             if (member) {
-                userStatus = member.presence?.status || 'Offline/Invisible (Cached)';
-                break; 
+                foundMember = member;
+                break;
             }
+        } catch (e) {
+            console.error(`Error fetching members for guild ${guild.name}: ${e.message}`);
         }
-        
-        console.log(`User ${user.tag} status: ${userStatus}`);
-        
-    } catch (error) {
-        console.error(`Failed to fetch user or presence:`, error.message);
+    }
+    
+    if (foundMember) {
+        updateStatusVariables(foundMember.presence);
+    } else {
+        currentUserStatus = 'User Not Found in Guild Cache';
+    }
+});
+
+client.on('presenceUpdate', (oldPresence, newPresence) => {
+    if (newPresence.userId === targetUserId) {
+        updateStatusVariables(newPresence);
     }
 });
 
@@ -83,7 +119,6 @@ client.login(token);
 app.use(express.static(resolve(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-    // Explicitly serve index.html
     res.sendFile(join(__dirname, 'public', 'index.html'));
 });
 

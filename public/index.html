@@ -8,8 +8,34 @@
 </head>
 <body>
     <div class="container">
-      <img src="pfp.png" alt="zarcotech" class="pfp">
+      <div class="header">
+        <div class="pfp-container">
+            <img src="pfp.png" alt="zarcotech" class="pfp">
+            <div class="activity" id="activity"></div> 
+        </div>
+        <div class="info">
+          <h1>Zarcotech</h1>
+          <h3>Discord Presence: <span id="status"></span></h3>
+        </div>
+      </div>
       
+      <div id="statusBubble">
+          <div id="bubbleContent"></div>
+          <div id="bubbleTail"></div>
+      </div>
+
+      <div id="musicStatus">
+          <p id="musicHeader">LISTENING TO SPOTIFY</p>
+          <div id="songDetails">
+              <img id="albumArt" src="" alt="Album Art">
+              <div id="songText">
+                  <p id="songTitle"></p>
+                  <p id="songArtist"></p>
+                  <p id="songAlbum"></p>
+              </div>
+          </div>
+      </div>
+
     </div>
     <canvas id="backgroundCanvas"></canvas>
     <script src="app.js"></script>
