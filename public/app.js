@@ -121,7 +121,7 @@ function fetchAndUpdateStatus() {
 document.addEventListener('DOMContentLoaded', () => {
   const secretWord = 'music';
   let typedBuffer = '';
-  const audio = new Audio('./music/wegz-elsoot.mp3');
+  const audio = new Audio('./music/tntgit add.mp3');
 
   document.addEventListener('keydown', (event) => {
     const key = event.key.toLowerCase();
