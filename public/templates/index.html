@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zarcotech</title>
+    <link rel="stylesheet" href="../style/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div class="hotbar"></div>
+    <div class="menu">
+        <div class="content">
+            <button id="home" class="home">Home</button>
+            <button id="services" class="services" onclick="window.location.href = '/services'">Services</button>
+            <button id="about" class="about" onclick="window.location.href = '/about'">About</button>
+            <button id="contact" class="contact" onclick="window.location.href = '/contact'">Contact</button>
+            <button id="donate" class="donate" onclick="window.location.href = '/donate'">Donate</button>
+        </div>
+    </div>
+    <div class="container">
+      <div class="header">
+        <div class="pfp-container">
+          <img src="pfp.png" alt="zarcotech" class="pfp" />
+          <div class="activity" id="activity"></div>
+        </div>
+        <div class="info">
+          <div class="socials">
+            <i
+              class="fa-brands fa-github social-icon"
+              onclick="window.open('https://github.com/Zarcotech', '_blank')"
+            ></i>
+            <i
+              class="fa-brands fa-discord"
+              onclick="window.open('https://dsc.gg/iciclenetwork', '_blank')"
+            ></i>
+            <i
+              class="fa-brands fa-spotify"
+              onclick="window.open('https://open.spotify.com/user/31hc3za2akh4l2ebakjebphgqcs4?si=5439a49ffd5d46e3', '_blank')"
+            ></i>
+            <i
+              class="fa-brands fa-instagram"
+              onclick="window.open('https://www.instagram.com/ftc_cybersalam/', '_blank')"
+            ></i>
+            <i
+              class="fa-brands fa-youtube"
+              onclick="window.open('https://www.youtube.com/@CyberSalam_FTC', '_blank')"
+            ></i>
+          </div>
+          <div class="live-info">
+            <h1>Zarcotech</h1>
+            <h3>Discord Presence: <span id="status"></span></h3>
+          </div>
+        </div>
+      </div>
+
+      <div id="statusBubble">
+        <div id="bubbleContent"></div>
+        <div id="bubbleTail"></div>
+      </div>
+
+      <div id="musicStatus">
+        <p id="musicHeader">LISTENING TO SPOTIFY</p>
+        <div id="songDetails">
+          <img id="albumArt" src="" alt="Album Art" />
+          <div id="songText">
+            <p id="songTitle"></p>
+            <p id="songArtist"></p>
+            <p id="songAlbum"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <canvas id="backgroundCanvas"></canvas>
+    <script src="../script/script.js"></script>
+  </body>
+</html>

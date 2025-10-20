@@ -17,7 +17,7 @@ const client = new Client({
 });
 
 const app = express();
-const port = 5000;
+const port = 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -119,7 +119,11 @@ client.login(token);
 app.use(express.static(resolve(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, 'public', 'index.html'));
+    res.sendFile(join(__dirname, 'public', 'templates', 'index.html'));
+});
+
+app.get('/services', (req, res) => {
+    res.sendFile(join(__dirname, 'public', 'templates', 'services.html'));
 });
 
 app.listen(port, () => {

@@ -1,7 +1,4 @@
 node_modules
-<<<<<<< HEAD
 pnpm-lock.yaml
+.replit
 .env
-=======
-pnpm-lock.yaml
->>>>>>> dbd2d04bc7c1b6ba58a849a7845dd278a009e424
