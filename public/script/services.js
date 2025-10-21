@@ -6,8 +6,25 @@ const donateBtn = document.getElementById('donate');
 
 const currentPath = window.location.pathname;
 
-console.log("Current Path:", currentPath);
-
 if (currentPath === '/services') {
     servicesBtn.classList.add('active');
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const elementsToAnimate = document.querySelectorAll('.web-dev');
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in-animation');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    elementsToAnimate.forEach(element => {
+        observer.observe(element);
+    });
+});
