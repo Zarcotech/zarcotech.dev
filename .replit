@@ -1,4 +1,4 @@
-modules = ["nodejs-20"]
+modules = ["web", "nodejs-20"]
 run = "pnpm i && pnpm start"
 [agent]
 expertMode = true
@@ -13,3 +13,4 @@ externalPort = 80
 
 [nix]
 packages = ["wget", "openssh"]
+channel = "stable-25_05"
