@@ -328,5 +328,7 @@ i:active {
 .home.active {
     border-radius: 30px;
     border: yellow 2px solid;
+    background-color: yellow;
+    color: black;
     padding: 1.05%;
 }

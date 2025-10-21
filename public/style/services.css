@@ -63,9 +63,10 @@ h1 {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 60vw;
     z-index: -1;
+    transform: translateX(65%) translateY(20%);
+    border-radius: 16px;
 }
 
 .container {
@@ -188,5 +189,37 @@ i:active {
 .services.active {
     border-radius: 30px;
     border: yellow 2px solid;
+    background-color: yellow;
+    color: black;
     padding: 1.05%;
+}
+
+.services-main {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    text-align: left;
+    color: gold;
+    width: 60vw;
+    animation: fade-in-from-left 2s ease-in-out;
+    transform: translateX(-25%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.web-dev {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    text-align: left;
+    color: gold;
+    width: 60vw;
+    animation: fade-in-from-left 2s ease-in-out;
+    transform: translateX(-25%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-top: 10px;
 }
