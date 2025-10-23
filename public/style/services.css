@@ -23,13 +23,13 @@ body {
 }
 
 h1 {
-    font-size: 4rem;
+    font-size: 3rem;
     margin: 0;
     padding: 0;
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: 1rem;
     margin: 0;
     padding: 0
 }
@@ -65,7 +65,7 @@ h2 {
     left: 0;
     width: 60vw;
     z-index: -15;
-    transform: translateX(25%) translateY(90%);
+    transform: translateX(25%) translateY(70%);
     border-radius: 16px;
 }
 
@@ -162,6 +162,7 @@ i {
 
 .web-dev {
     font-family: 'Space Grotesk', sans-serif;
+    box-shadow: 0 0 25px #ffd70033;
     opacity: 0;
     transform: translateY(50px);
     transition: all 1s ease-out;
