@@ -28,6 +28,12 @@ h1 {
     padding: 0;
 }
 
+h2 {
+    font-size: 2rem;
+    margin: 0;
+    padding: 0
+}
+
 .head {
     display: flex;
     flex-direction: column;
@@ -36,7 +42,7 @@ h1 {
     color: gold;
     width: 60vw;
     animation: fade-in-from-left 2s ease-in-out;
-    transform: translateX(-20%) translateY(-50%);
+    transform: translateX(-20%) translateY(10%);
     background-color: rgba(0, 0, 0, 0.7);
     padding: 1rem;
     border-radius: 10px;
@@ -45,11 +51,11 @@ h1 {
 @keyframes fade-in-from-left {
     0% {
         opacity: 0;
-        transform: translateX(-100%) translateY(-50%);
+        transform: translateX(-100%) translateY(10%);
     }
     100% {
         opacity: 1;
-        transform: translateX(-20%) translateY(-50%);
+        transform: translateX(-20%) translateY(10%);
     }
 }
 
@@ -59,7 +65,7 @@ h1 {
     left: 0;
     width: 60vw;
     z-index: -15;
-    transform: translateX(25%) translateY(40%);
+    transform: translateX(25%) translateY(90%);
     border-radius: 16px;
 }
 
@@ -70,6 +76,7 @@ h1 {
     z-index: 1;
     color: var(--discord-text-white);
     text-align: left;
+    font-family: 'Space Grotesk', sans-serif;
 }
 
 i {
@@ -77,19 +84,9 @@ i {
     font-size: 1.2rem;
     cursor: pointer;
     will-change: transform, color, box-shadow;
-    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
-        color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-i:hover {
-    color: var(--discord-text-white);
-    transform: scale(1.15);
-    animation: pulse-hover 1s infinite alternate cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-i:active {
-    transform: scale(0.9);
-    animation: none;
+    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    margin-right: 10px;
+    color: green;
 }
 
 @keyframes pulse-hover {
@@ -164,6 +161,7 @@ i:active {
 }
 
 .web-dev {
+    font-family: 'Space Grotesk', sans-serif;
     opacity: 0;
     transform: translateY(50px);
     transition: all 1s ease-out;
@@ -173,10 +171,37 @@ i:active {
     padding: 1rem;
     border-radius: 10px;
     position: relative;
-    top: 50vh;
+    top: 30vh;
 }
 
 .fade-in-animation {
     opacity: 1;
     transform: translateY(0);
+}
+
+.pricing-boxes {
+    display: flex;
+    justify-content: space-around;
+    top: 20px;
+}
+
+.pricing-box {
+    background-color: var(--discord-card-bg);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 25%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+p {
+    color: linear-gradient(to right, #ff0000, #00ff00, #0000ff);
 }
