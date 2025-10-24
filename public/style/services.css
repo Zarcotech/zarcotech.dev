@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
     --discord-dark: #202225;
     --discord-card-bg: #2f3136;
@@ -35,6 +38,7 @@ h2 {
 }
 
 .head {
+    font-family: 'Space Grotesk', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: left;
@@ -42,7 +46,7 @@ h2 {
     color: gold;
     width: 60vw;
     animation: fade-in-from-left 2s ease-in-out;
-    transform: translateX(-20%) translateY(10%);
+    transform: translateX(-20%) translateY(20%);
     background-color: rgba(0, 0, 0, 0.7);
     padding: 1rem;
     border-radius: 10px;
@@ -51,11 +55,11 @@ h2 {
 @keyframes fade-in-from-left {
     0% {
         opacity: 0;
-        transform: translateX(-100%) translateY(10%);
+        transform: translateX(-100%) translateY(20%);
     }
     100% {
         opacity: 1;
-        transform: translateX(-20%) translateY(10%);
+        transform: translateX(-20%) translateY(20%);
     }
 }
 
@@ -65,7 +69,7 @@ h2 {
     left: 0;
     width: 60vw;
     z-index: -15;
-    transform: translateX(25%) translateY(70%);
+    transform: translateX(25%) translateY(80%);
     border-radius: 16px;
 }
 
@@ -100,7 +104,9 @@ i {
 
 .menu {
     position: fixed;
-    top: 1vh;
+    font-family: "Raleway", sans-serif;
+    color: var(--discord-text-white);
+    top: 5vh;
     left: 50%;
     transform: translate(-50%, 0);
     width: 200vw;
@@ -134,40 +140,37 @@ i {
     justify-content: space-around;
     align-items: center;
     height: 100%;
-    color: var(--discord-text-white);
-    font-weight: 600;
     font-size: 1.2rem;
-    color: yellow;
+    color: var(--discord-text-white);
     font-weight: bolder;
 }
 
 .content button {
     background: none;
     border: none;
-    color: var(--discord-text-white);
     cursor: pointer;
     transition: color 0.3s ease;
-    color: yellow;
+    color: var(--discord-text-white);
     font-size: large;
     font-weight: bolder;
 }
 
 .services.active {
     border-radius: 30px;
-    border: yellow 2px solid;
-    background-color: yellow;
-    color: black;
-    padding: 0.6%;
+    border: none;
+    background-color: #22252b;
+    color: var(--discord-text-white);
+    padding: 1%;
 }
 
 .web-dev {
     font-family: 'Space Grotesk', sans-serif;
     box-shadow: 0 0 25px #ffd70033;
     opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(5vw);
     transition: all 1s ease-out;
     color: gold;
-    width: 60vw;
+    width: 95vw;
     background-color: rgba(0, 0, 0, 0.7);
     padding: 1rem;
     border-radius: 10px;
@@ -177,7 +180,7 @@ i {
 
 .fade-in-animation {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(5vw);
 }
 
 .pricing-boxes {
@@ -191,8 +194,8 @@ i {
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    width: 25%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 27%;
+    box-shadow: 0 0 15px aqua;
     transition: transform 0.3s ease;
 }
 

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
     --discord-dark: #202225;
@@ -274,6 +275,8 @@ i:active {
 
 .menu {
     position: fixed;
+    font-family: "Raleway", sans-serif;
+    color: var(--discord-text-white);
     top: 5vh;
     left: 50%;
     transform: translate(-50%, 0);
@@ -309,28 +312,25 @@ i:active {
     justify-content: space-around;
     align-items: center;
     height: 100%;
-    color: var(--discord-text-white);
-    font-weight: 600;
     font-size: 1.2rem;
-    color: yellow;
+    color: var(--discord-text-white);
     font-weight: bolder;
 }
 
 .content button {
     background: none;
     border: none;
-    color: var(--discord-text-white);
     cursor: pointer;
     transition: color 0.3s ease;
-    color: yellow;
+    color: var(--discord-text-white);
     font-size: large;
     font-weight: bolder;
 }
 
 .home.active {
     border-radius: 30px;
-    border: yellow 2px solid;
-    background-color: yellow;
-    color: black;
-    padding: 0.6%;
+    border: none;
+    background-color: #22252b;
+    color: var(--discord-text-white);
+    padding: 1%;
 }
