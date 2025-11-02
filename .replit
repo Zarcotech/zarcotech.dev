@@ -1,5 +1,5 @@
 modules = ["web", "nodejs-20"]
-run = "pnpm i && pnpm start"
+run = "git pull && pnpm i && pnpm start"
 
 [agent]
 expertMode = true

@@ -109,7 +109,7 @@ function fetchAndUpdateStatus() {
     })
     .catch(error => {
         console.error("Error fetching Discord status:", error);
-        document.getElementById('status').innerText = 'API Error';
+        document.getElementById('status').innerText = 'API Error | Please contact zarcotech, try again later, or reload the page';
         activity.style.backgroundColor = "#f04747";
         if (statusBubble) {
             statusBubble.style.display = 'none';
