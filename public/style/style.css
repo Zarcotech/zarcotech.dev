@@ -44,13 +44,14 @@ body {
     justify-content: center;
     gap: 20px;
     z-index: 1;
+    width: 60vw;
 }
 
 .createTheme {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    width: 300px;
+    width: 100px;
     max-height: 80vh;
     overflow-y: auto;
     box-sizing: border-box;
@@ -61,6 +62,7 @@ body {
 }
 
 .container {
+    height: 70%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -71,13 +73,14 @@ body {
 }
 
 .header {
+    height: 120%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     background-color: var(--discord-card-bg);
     border-radius: 8px;
     padding: 1rem;
-    width: 30vw;
+    width: 130;
     box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
     position: relative;
     gap: 0;
@@ -173,14 +176,14 @@ body {
 
 .pfp-container {
     position: relative;
-    width: 90px;
-    height: 90px;
+    width: 120px;
+    height: 120px;
     margin-bottom: 0.5rem;
 }
 
 .pfp {
-    width: 90px;
-    height: 90px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
     margin: 0;
@@ -190,10 +193,10 @@ body {
 
 .activity {
     position: absolute;
-    bottom: -3px;
-    right: -3px;
-    width: 22px;
-    height: 22px;
+    bottom: 2px;
+    right: 2px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     z-index: 3;
     background-color: var(--discord-status-offline);
@@ -326,6 +329,7 @@ i:active {
     align-items: center;
     justify-content: center;
     position: relative;
+    width: 60vw;
 }
 
 .head-container {
@@ -618,4 +622,18 @@ select {
 
 .sendTheme {
     width: 100%;
+}
+
+.createTheme {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: var(--discord-card-bg);
+    border-radius: 8px;
+    padding: 1rem;
+    width: 15vw;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+    gap: 0;
+    overflow: hidden;
 }
