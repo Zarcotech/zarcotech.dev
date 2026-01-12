@@ -248,17 +248,26 @@ function sendNew() {
 }
 
 function refreshThemeDropdown() {
-  const sel = document.getElementById('themeSelect');
-  if (!sel) return;
-  const currentVal = currentTheme;
-  sel.innerHTML = '';
-  Object.keys(themes).forEach(k => {
-    const opt = document.createElement('option');
-    opt.value = k;
-    opt.textContent = k;
-    sel.appendChild(opt);
-  });
-  sel.value = currentVal;
+    const sel = document.getElementById('themeSelect');
+    if (!sel) return;
+
+    let valueToSet = currentTheme;
+
+    sel.innerHTML = '';
+    Object.keys(themes).forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.textContent = k;
+        sel.appendChild(opt);
+    });
+
+    if (!valueToSet || !themes.hasOwnProperty(valueToSet)) {
+        valueToSet = "JavaScript";
+    }
+
+    sel.value = valueToSet;
+
+    applyTheme(valueToSet);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -20,6 +20,7 @@ body {
     overflow: hidden;
     background-color: var(--discord-dark);
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -527,110 +528,95 @@ h2, h1 {
     pointer-events: none;
 }
 
-.createTheme input {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    background-color: var(--discord-card-bg);
-    border: var(--spotify-green) 3px solid;
-    color: var(--discord-text-white);
-    font-family: 'Space Grotesk', sans-serif;
-    border-radius: 10px;
-    gap: calc(0.3em);
-    box-sizing: border-box;
-}
-
-.createTheme input::placeholder {
-    color: var(--discord-text-light);
-}
-
-.createTheme input:focus {
-    outline: none;
-    box-shadow: 0 0 5px var(--spotify-green);
+.main-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 1;
 }
 
 .createTheme {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
-    max-height: 30vh;
+    gap: 1rem;
+    width: 300px;
+    max-height: 80vh;
     overflow-y: auto;
     box-sizing: border-box;
-    border: var(--spotify-green) 3px solid;
+    padding: 1.2rem;
+    border-radius: 12px;
+    background-color: var(--discord-card-bg);
+}
+
+.createTheme input, 
+#themeSelect {
+    display: block;
+    width: 100%;
+    background-color: var(--discord-card-bg);
+    border: 2px solid var(--spotify-green);
+    border-bottom: 2px solid var(--spotify-green);
+    color: var(--discord-text-white);
+    font-family: 'Space Grotesk', sans-serif;
+    border-radius: 6px;
     padding: 0.8rem;
-    border-radius: 10px;
+    box-sizing: border-box;
+    transition: all 0.2s ease-in-out;
+}
+
+.createTheme input:focus, 
+#themeSelect:focus {
+    outline: none;
+    border: 2px solid var(--spotify-green);
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 12px rgba(30, 215, 96, 0.2);
+}
+
+.createTheme input::placeholder {
+    color: var(--discord-text-light);
+    opacity: 0.7;
 }
 
 button {
     background-color: var(--spotify-green);
-    color: var(--discord-text-white);
+    color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
+    padding: 0.8rem;
+    border-radius: 8px;
     font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: transform 0.1s active, background-color 0.3s ease;
     width: 100%;
-    box-sizing: border-box;
+    margin-top: 0.5rem;
+}
+
+button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
 }
 
 label {
-    color: var(--discord-text-white);
-    font-size: 0.9rem;
-}
-
-.createTheme inout {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    background-color: var(--discord-card-bg);
-    border: var(--spotify-green) 3px solid;
-    color: var(--discord-text-white);
-    font-family: 'Space Grotesk', sans-serif;
-    border-radius: 10px;
-    gap: calc(0.3em);
-    box-sizing: border-box;
-}
-
-#themeSelect {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    background-color: var(--discord-card-bg);
-    border: var(--spotify-green) 3px solid;
-    color: var(--discord-text-white);
-    font-family: 'Space Grotesk', sans-serif;
-    border-radius: 10px;
-    gap: calc(0.3em);
-    box-sizing: border-box;
-    padding: 0.5rem;
-}
-
-select::option(:first-of-type) {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-select::option(:last-of-type) {
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-select:focus {
-    outline: none;
-}
-
-#rainSpeed:focus {
-    outline: none;
+    color: var(--discord-text-light);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: -0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 ::-webkit-scrollbar {
-  background: var(--discord-card-bg);
+    width: 6px;
 }
 
-::-webkit-scrollbar::after{
+::-webkit-scrollbar-track {
     background: var(--discord-card-bg);
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -639,20 +625,39 @@ select:focus {
 }
 
 body {
+    scrollbar-width: thin;
     scrollbar-color: var(--spotify-green) var(--discord-card-bg);
-    scrollbar-highlight-color: var(--spotify-green);
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-input[type="number"] {
-  -moz-appearance: textfield;
-  appearance: textfield; 
+option {
+    background-color: var(--discord-card-bg);
+    color: var(--discord-text-white);
 }
 
-option::hover {
+select {
+    background-color: var(--discord-card-bg);
+    color: var(--discord-text-white);
+    border-bottom: 2px solid var(--spotify-green);
+    border-radius: 6px;
+    padding: 0.8rem;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: all 0.2s ease-in-out;
     cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sendTheme {
+    width: 100%;
 }
