@@ -179,14 +179,14 @@ body {
 
 .pfp-container {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
     margin-bottom: 0.5rem;
 }
 
 .pfp {
-    width: 120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
     object-fit: cover;
     margin: 0;
@@ -196,14 +196,14 @@ body {
 
 .activity {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
-    width: 28px;
-    height: 28px;
+    bottom: 5px;
+    right: 5px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     z-index: 3;
     background-color: var(--discord-status-offline);
-    border: 5px solid var(--discord-card-bg);
+    border: 6px solid var(--discord-card-bg);
     box-shadow: none;
     transition: background-color 0.3s ease;
 }
