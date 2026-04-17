@@ -3,14 +3,15 @@
 import { useState } from "react";
 import { FaUserCircle, FaCode } from "react-icons/fa";
 import { TbWorldBolt } from "react-icons/tb";
-import AboutModal from "./AboutModal";
-import ProjectsModal from "./ProjectsModal";
-import SocialsModal from "./SocialsModal";
+import AboutPopup from "./aboutPopup";
+import ProjectsPopup from "./projectsPopup";
+import SocialsPopup from "./socialsPopup";
+import Html from "./iconComponents/html";
 
-type Modal = "about" | "projects" | "socials" | null;
+type Popup = "about" | "projects" | "socials" | null;
 
 function About() {
-  const [open, setOpen] = useState<Modal>(null);
+  const [open, setOpen] = useState<Popup>(null);
 
   return (
     <>
@@ -21,7 +22,7 @@ function About() {
         >
           <FaUserCircle
             size={40}
-            className="transition-transform duration-300 group-hover:rotate-12 group-hover:scale-125"
+            className="transition-transform duration-300 group-hover:rotate-372 group-hover:scale-125"
           />
           <div className="flex-2 text-center">
             <span className="font-bold">About Me</span>
@@ -34,7 +35,7 @@ function About() {
         >
           <FaCode
             size={40}
-            className="transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-125"
+            className="transition-transform duration-300 group-hover:-rotate-372 group-hover:scale-125"
           />
           <div className="flex-2 text-center">
             <span className="font-bold">My Projects</span>
@@ -47,17 +48,18 @@ function About() {
         >
           <TbWorldBolt
             size={40}
-            className="transition-transform duration-500 group-hover:rotate-180 group-hover:scale-125"
+            className="transition-transform duration-500 group-hover:rotate-372 group-hover:scale-125"
           />
           <div className="flex-2 text-center">
             <span className="font-bold">Socials</span>
           </div>
         </div>
+        <Html />
       </div>
 
-      {open === "about" && <AboutModal onClose={() => setOpen(null)} />}
-      {open === "projects" && <ProjectsModal onClose={() => setOpen(null)} />}
-      {open === "socials" && <SocialsModal onClose={() => setOpen(null)} />}
+      {open === "about" && <AboutPopup onClose={() => setOpen(null)} />}
+      {open === "projects" && <ProjectsPopup onClose={() => setOpen(null)} />}
+      {open === "socials" && <SocialsPopup onClose={() => setOpen(null)} />}
     </>
   );
 }

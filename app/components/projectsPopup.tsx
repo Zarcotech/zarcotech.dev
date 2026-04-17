@@ -4,11 +4,11 @@ interface Props {
   onClose: () => void;
 }
 
-function ProjectsModal({ onClose }: Props) {
+function ProjectsPopup({ onClose }: Props) {
   const projects = [
-    { name: "Zarcotech", desc: "Personal portfolio and Discord status site." },
-    { name: "Project Two", desc: "A short description of what this project does." },
-    { name: "Project Three", desc: "A short description of what this project does." },
+    { name: "Zarcotech's Portfolio", desc: "My personal portfolio along with interactive information about my presence(s)" },
+    { name: "novaJS", desc: "A built-in Bash script CLI in browser to teach others, embed to webOSes, and more." },
+    { name: "Nocturn", desc: "A combination of APIs and interface to run a music app. Currently in deprication due to an incoming of a rewrite." },
   ];
 
   return (
@@ -45,4 +45,4 @@ function ProjectsModal({ onClose }: Props) {
   );
 }
 
-export default ProjectsModal;
+export default ProjectsPopup;

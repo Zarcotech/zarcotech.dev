@@ -4,10 +4,9 @@ interface Props {
   onClose: () => void;
 }
 
-function SocialsModal({ onClose }: Props) {
+function SocialsPopup({ onClose }: Props) {
   const links = [
-    { label: "GitHub", href: "https://github.com" },
-    { label: "Twitter / X", href: "https://x.com" },
+    { label: "GitHub", href: "https://github.com/Zarcotech" },
     { label: "Discord", href: "https://discord.com" },
   ];
 
@@ -48,4 +47,4 @@ function SocialsModal({ onClose }: Props) {
   );
 }
 
-export default SocialsModal;
+export default SocialsPopup;
