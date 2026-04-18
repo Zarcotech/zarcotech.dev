@@ -1,0 +1,23 @@
+modules = ["nodejs-20"]
+[agent]
+expertMode = true
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+[workflows]
+runButton = "run dev"
+
+[[workflows.workflow]]
+name = "run dev"
+mode = "parallel"
+author = 28475602
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+
+[nix]
+packages = ["wget"]
+
