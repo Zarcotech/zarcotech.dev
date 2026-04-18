@@ -54,7 +54,6 @@ function About() {
             <span className="font-bold">Socials</span>
           </div>
         </div>
-        <Html />
       </div>
 
       {open === "about" && <AboutPopup onClose={() => setOpen(null)} />}
