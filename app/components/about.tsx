@@ -6,7 +6,6 @@ import { TbWorldBolt } from "react-icons/tb";
 import AboutPopup from "./aboutPopup";
 import ProjectsPopup from "./projectsPopup";
 import SocialsPopup from "./socialsPopup";
-import Html from "./iconComponents/html";
 
 type Popup = "about" | "projects" | "socials" | null;
 
@@ -38,7 +37,7 @@ function About() {
             className="transition-transform duration-300 group-hover:-rotate-372 group-hover:scale-125"
           />
           <div className="flex-2 text-center">
-            <span className="font-bold">My Projects</span>
+            <span className="font-bold">Showcase</span>
           </div>
         </div>
 

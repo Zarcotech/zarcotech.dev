@@ -13,15 +13,15 @@ function ProjectsPopup({ onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-[10px]"
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-xl w-[520px] max-w-[90vw] p-8 shadow-2xl"
+        className="rounded-xl w-[100%] max-w-[100vw] p-8 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">My Projects</h2>
+          <h2 className="text-xl font-bold text-[2rem]">My Projects</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors text-2xl leading-none"
@@ -29,14 +29,14 @@ function ProjectsPopup({ onClose }: Props) {
             &times;
           </button>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {projects.map((p) => (
-            <div
-              key={p.name}
-              className="border border-gray-200 dark:border-neutral-700 rounded-lg p-4"
+            <div 
+              key={p.name} 
+              className="backdrop-blur-[15px] rounded-lg p-4"
             >
-              <p className="font-semibold text-sm">{p.name}</p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{p.desc}</p>
+              <p className="font-semibold text-sm text-[1.5rem]">{p.name}</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 text-[1rem]">{p.desc}</p>
             </div>
           ))}
         </div>
