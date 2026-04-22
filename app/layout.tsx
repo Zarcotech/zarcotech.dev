@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Ubuntu } from "next/font/google";
 import "./globals.css";
 
-const space_grotesk = Space_Grotesk({
+const ubuntu = Ubuntu({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-space-grotesk',
+  variable: '--font-ubuntu',
+  weight: ['300', '400', '500', '700']
 });
 
 export const metadata: Metadata = {
@@ -22,8 +23,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className={`${space_grotesk.variable} min-h-full flex flex-col`}>{children}</body>
+      <body className={`${ubuntu.variable} min-h-full flex flex-col`}>{children}</body>
     </html>
   );
 }

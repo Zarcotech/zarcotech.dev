@@ -53,14 +53,14 @@ function AboutPopup({ onClose }: Props) {
           <LangTag name="JavaScript" icon="/icons/js.png"  color="yellow" />, and I also am
           fluent in the{" "}
           <LangTag name="Node.js" icon="/icons/nodejs.png" color="green" />,{" "}
-          <LangTag name="React" icon="/icons/react.png" color="tele" />, and{" "} 
+          <LangTag name="React" icon="/icons/react.png" color="blue" />, and{" "} 
           <LangTag name="Next.js" icon="/icons/nextjs.png" color="white" /> {" "} frameworks. I
           would like to try to get my focus in the AI and neural networks field. I started
           programming during the COVID-19 pandemic, and I&apos;ve been hooked ever since.
           I started learning basic logic using <LangTag name="Scratch" icon="/icons/scratch.png" color="yellow" />.
           Then I moved on to learning <LangTag name="Python" icon="/icons/python.png" color="blue" />, using a lot
-          of <LangTag name="Tkinter" icon="/icons/tkinter.png" color="white" /> to create simple GUI applications.
-          Such as calculators, login systems, and more. Now, I am learning <LangTag name="C++" icon="/icons/c++.png" color="blue"/> and <LangTag name="Rust" icon="/icons/rust.png" color="red"/>.
+          of <LangTag name="Tkinter" icon="/icons/tkinter.png" color="white" /> to create simple GUI applications
+          such as calculators, login systems, and more. Now, I am learning <LangTag name="C++" icon="/icons/c++.png" color="blue"/> and <LangTag name="Rust" icon="/icons/rust.png" color="red"/>.
         </p>
       </div>
       

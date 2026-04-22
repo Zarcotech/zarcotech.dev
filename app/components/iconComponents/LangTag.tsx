@@ -24,7 +24,7 @@ function LangTag({ name, icon, color }: Props) {
     <span className="relative inline-block group cursor-default">
       <span className={`relative inline-block ${colorClass}`}>
         {name}
-        <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-current transition-all duration-300 ease-out group-hover:w-full"></span>
+        <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-current transition-all duration-450 ease-out group-hover:w-full"></span>
       </span>
       <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+8px)] z-50 flex flex-col items-center opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 ease-out w-30 h-30">
         <Image 

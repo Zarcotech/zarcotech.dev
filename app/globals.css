@@ -22,5 +22,10 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-space-grotesk), sans-serif;
+  font-family: var(--font-ubuntu), sans-serif;
+}
+
+.glow {
+  filter: drop-shadow(0 0 10px rgba(123, 122, 122, 0.5));
+  font-weight: 700;
 }

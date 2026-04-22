@@ -14,7 +14,7 @@ function About() {
 
   return (
     <>
-      <div className="flex flex-row gap-4 p-4">
+      <div className="flex flex-row gap-4 p-4 z-1000">
         <div
           onClick={() => setOpen("about")}
           className="group h-32 w-64 border-2 border-gray-300 dark:border-neutral-700 rounded-md flex items-center p-4 gap-4 cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105"
