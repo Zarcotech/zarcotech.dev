@@ -13,7 +13,8 @@ function About() {
   const [open, setOpen] = useState<Popup>(null);
 
   return (
-    <>
+    <div className="display-block">
+      <h1 className="text-[2rem] font-bold translate-x-6">Explore</h1>
       <div className="flex flex-row gap-4 p-4 z-1000">
         <div
           onClick={() => setOpen("about")}
@@ -58,7 +59,7 @@ function About() {
       {open === "about" && <AboutPopup onClose={() => setOpen(null)} />}
       {open === "projects" && <ProjectsPopup onClose={() => setOpen(null)} />}
       {open === "socials" && <SocialsPopup onClose={() => setOpen(null)} />}
-    </>
+    </div>
   );
 }
 

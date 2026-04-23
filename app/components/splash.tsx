@@ -2,7 +2,7 @@ import Canvas from "./canvas";
 
 function Splash() {
   return (
-    <div className="w-5/12 flex justify-center py-4">
+    <div className="relative w-full h-64 overflow-hidden rounded-xl">
       <Canvas />
     </div>
   )
