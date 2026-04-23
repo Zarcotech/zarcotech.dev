@@ -1,7 +1,6 @@
 "use client";
 
 import LangTag from "./iconComponents/LangTag";
-// import LangTag from "./iconComponents/LangTag";
 import { useEffect } from 'react';
 
 interface Props {

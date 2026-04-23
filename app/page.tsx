@@ -1,21 +1,18 @@
 import About from "./components/about";
 import Contributions from "./components/heatmap";
-import Splash from "./components/splash";
+import Canvas from "./components/canvas";
 import Info from "./components/info";
 
 function Home() {
   return (
-    <div className="">
-      <main className="grid grid-cols-4 h-screen">
-        <div className="col-span-1 row-span-2">
-          
-          <Splash />
-          <Info />
-        </div>
-        <div className="col-span-3 grid grid-rows-2">
-          <div className="flex items-center justify-center"><About /></div>
-          <div className="flex items-center justify-center"><Contributions /></div>
-        </div>
+    <div className="relative isolate min-h-screen">
+      <Canvas />
+      <div className="fixed bottom-4 left-4 z-20">
+        <Info />
+      </div>
+      <main className="relative z-10 grid min-h-screen grid-rows-2 px-4 pb-72 pt-20 md:pb-8 md:pl-[360px] md:pr-8 md:pt-8">
+        <div className="flex items-center justify-center"><About /></div>
+        <div className="flex items-center justify-center"><Contributions /></div>
       </main>
     </div>
   );
