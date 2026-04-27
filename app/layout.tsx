@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import "./globals.css";
+import ThemeSwitcher from './components/themeSwitcher';
 
 const ubuntu = Ubuntu({
   subsets: ['latin'],
@@ -25,7 +26,10 @@ export default function RootLayout({
       className={`h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className={`${ubuntu.variable} min-h-full flex flex-col`}>{children}</body>
+      <body className={`${ubuntu.variable} min-h-full flex flex-col`}>
+        <ThemeSwitcher />
+        {children}
+      </body>
     </html>
   );
 }

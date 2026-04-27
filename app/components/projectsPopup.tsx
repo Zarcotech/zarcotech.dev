@@ -13,7 +13,7 @@ function ProjectsPopup({ onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-[10px]"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-[10px]"
       onClick={onClose}
     >
       <div

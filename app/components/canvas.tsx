@@ -2,39 +2,10 @@
 
 import { useEffect, useRef } from "react";
 
-type IconSprite = {
-    image: HTMLImageElement;
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    size: number;
-    rotation: number;
-    spin: number;
-};
-
-const ICON_SOURCES = [
-    "/icons/c++.png",
-    "/icons/css.png",
-    "/icons/html.png",
-    "/icons/js.png",
-    "/icons/nextjs.png",
-    "/icons/nodejs.png",
-    "/icons/python.png",
-    "/icons/react.png",
-    "/icons/rust.png",
-    "/icons/scratch.png",
-    "/icons/tkinter.png",
-];
-
 function Canvas() {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const spritesRef = useRef<IconSprite[]>([]);
-    const dragIndexRef = useRef(-1);
-    const pointerRef = useRef({ x: 0, y: 0, down: false, prevX: 0, prevY: 0 });
-    const frameRef = useRef<number | null>(null);
-    const sizeRef = useRef({ width: 0, height: 0, dpr: 1 });
+    const isDarkRef = useRef(true);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -44,192 +15,228 @@ function Canvas() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const loadImage = (src: string) =>
-            new Promise<HTMLImageElement>((resolve, reject) => {
-                const image = new Image();
-                image.src = src;
-                image.onload = () => resolve(image);
-                image.onerror = () => reject(new Error(`Failed to load ${src}`));
-            });
-
-        const resizeCanvas = () => {
-            const width = container.clientWidth;
-            const height = container.clientHeight;
-            const dpr = Math.max(1, window.devicePixelRatio || 1);
-            sizeRef.current = { width, height, dpr };
-            canvas.width = Math.floor(width * dpr);
-            canvas.height = Math.floor(height * dpr);
-            canvas.style.width = `${width}px`;
-            canvas.style.height = `${height}px`;
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const updateTheme = () => {
+            const root = document.documentElement;
+            const body = document.body;
+            const hasDarkClass = root.classList.contains("dark") || body.classList.contains("dark");
+            const hasDarkData = root.getAttribute("data-theme") === "dark" || body.getAttribute("data-theme") === "dark";
+            isDarkRef.current = hasDarkClass || hasDarkData;
         };
 
-        const spawnSprites = (images: HTMLImageElement[]) => {
-            const { width, height } = sizeRef.current;
-            const count = Math.max(20, Math.min(80, Math.floor((width * height) / 30000)));
-            spritesRef.current = Array.from({ length: count }, () => {
-                const image = images[Math.floor(Math.random() * images.length)];
-                const size = 28 + Math.random() * 30;
-                return {
-                    image,
+        updateTheme();
+
+        const observer = new MutationObserver(updateTheme);
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class", "data-theme"],
+        });
+
+        let width = 0;
+        let height = 0;
+        let frame = 0;
+
+        const stars: any[] = [];
+        const comets: any[] = [];
+        const particles: any[] = [];
+
+        function init() {
+            if (!canvas || !container) return;
+            width = canvas.width = container.clientWidth;
+            height = canvas.height = container.clientHeight;
+
+            stars.length = 0;
+            particles.length = 0;
+
+            for (let i = 0; i < 200; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height * 0.8,
+                    size: Math.random() * 2,
+                    seed: Math.random() * 1000,
+                    speed: 0.02 + Math.random() * 0.05,
+                });
+            }
+
+            for (let i = 0; i < 80; i++) {
+                particles.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 1.2,
-                    vy: (Math.random() - 0.5) * 1.2,
-                    size,
-                    rotation: Math.random() * Math.PI * 2,
-                    spin: (Math.random() - 0.5) * 0.02,
-                };
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    size: 1 + Math.random() * 2,
+                    phase: Math.random() * 1000,
+                });
+            }
+        }
+
+        function drawNight() {
+            const sky = ctx!.createLinearGradient(0, 0, 0, height);
+            sky.addColorStop(0, "#04030a");
+            sky.addColorStop(0.6, "#0b0720");
+            sky.addColorStop(1, "#1a0b2e");
+            ctx!.fillStyle = sky;
+            ctx!.fillRect(0, 0, width, height);
+
+            const horizon = ctx!.createLinearGradient(0, height * 0.6, 0, height);
+            horizon.addColorStop(0, "rgba(168,85,247,0)");
+            horizon.addColorStop(0.5, "rgba(168,85,247,0.15)");
+            horizon.addColorStop(1, "rgba(168,85,247,0.35)");
+            ctx!.fillStyle = horizon;
+            ctx!.fillRect(0, height * 0.6, width, height);
+
+            stars.forEach((s) => {
+                const alpha = 0.3 + Math.sin(frame * s.speed + s.seed) * 0.7;
+                ctx!.shadowBlur = s.size > 1.2 ? 8 : 0;
+                ctx!.shadowColor = "white";
+                ctx!.fillStyle = `rgba(255,255,255,${alpha})`;
+                ctx!.beginPath();
+                ctx!.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx!.fill();
             });
-        };
 
-        const pickSprite = (x: number, y: number) => {
-            const sprites = spritesRef.current;
-            for (let i = sprites.length - 1; i >= 0; i -= 1) {
-                const sprite = sprites[i];
-                const dx = sprite.x - x;
-                const dy = sprite.y - y;
-                const radius = sprite.size * 0.45;
-                if ((dx * dx) + (dy * dy) <= radius * radius) return i;
-            }
-            return -1;
-        };
+            ctx!.shadowBlur = 0;
 
-        const pushNearby = (x: number, y: number, dx: number, dy: number) => {
-            const radius = 180;
-            const radiusSq = radius * radius;
-            const sprites = spritesRef.current;
-            for (let i = 0; i < sprites.length; i += 1) {
-                if (i === dragIndexRef.current) continue;
-                const sprite = sprites[i];
-                const ox = sprite.x - x;
-                const oy = sprite.y - y;
-                const distSq = (ox * ox) + (oy * oy);
-                if (distSq > radiusSq) continue;
-                const power = 1 - (distSq / radiusSq);
-                sprite.vx += dx * 0.16 * power;
-                sprite.vy += dy * 0.16 * power;
-            }
-        };
-
-        const onPointerDown = (event: PointerEvent) => {
-            pointerRef.current.down = true;
-            pointerRef.current.x = event.clientX;
-            pointerRef.current.y = event.clientY;
-            pointerRef.current.prevX = event.clientX;
-            pointerRef.current.prevY = event.clientY;
-            dragIndexRef.current = pickSprite(event.clientX, event.clientY);
-        };
-
-        const onPointerMove = (event: PointerEvent) => {
-            const pointer = pointerRef.current;
-            const dx = event.clientX - pointer.prevX;
-            const dy = event.clientY - pointer.prevY;
-            pointer.x = event.clientX;
-            pointer.y = event.clientY;
-            pointer.prevX = event.clientX;
-            pointer.prevY = event.clientY;
-            if (!pointer.down) return;
-            pushNearby(pointer.x, pointer.y, dx, dy);
-        };
-
-        const onPointerUp = () => {
-            pointerRef.current.down = false;
-            dragIndexRef.current = -1;
-        };
-
-        const tick = () => {
-            const { width, height } = sizeRef.current;
-            ctx.clearRect(0, 0, width, height);
-
-            const pointer = pointerRef.current;
-            const dragIndex = dragIndexRef.current;
-            const sprites = spritesRef.current;
-
-            for (let i = 0; i < sprites.length; i += 1) {
-                const sprite = sprites[i];
-                if (pointer.down && dragIndex === i) {
-                    const dx = pointer.x - sprite.x;
-                    const dy = pointer.y - sprite.y;
-                    sprite.vx = dx * 0.35;
-                    sprite.vy = dy * 0.35;
-                }
-
-                sprite.x += sprite.vx;
-                sprite.y += sprite.vy;
-                sprite.rotation += sprite.spin;
-                sprite.vx *= 0.985;
-                sprite.vy *= 0.985;
-
-                if (sprite.x < sprite.size * 0.5) {
-                    sprite.x = sprite.size * 0.5;
-                    sprite.vx *= -0.85;
-                }
-                if (sprite.x > width - sprite.size * 0.5) {
-                    sprite.x = width - sprite.size * 0.5;
-                    sprite.vx *= -0.85;
-                }
-                if (sprite.y < sprite.size * 0.5) {
-                    sprite.y = sprite.size * 0.5;
-                    sprite.vy *= -0.85;
-                }
-                if (sprite.y > height - sprite.size * 0.5) {
-                    sprite.y = height - sprite.size * 0.5;
-                    sprite.vy *= -0.85;
-                }
-
-                const half = sprite.size * 0.5;
-                ctx.save();
-                ctx.globalAlpha = 0.9;
-                ctx.translate(sprite.x, sprite.y);
-                ctx.rotate(sprite.rotation);
-                ctx.drawImage(sprite.image, -half, -half, sprite.size, sprite.size);
-                ctx.restore();
+            if (Math.random() > 0.99) {
+                comets.push({
+                    x: Math.random() * width,
+                    y: -50,
+                    vx: 3 + Math.random() * 4,
+                    vy: 3 + Math.random() * 4,
+                    life: 1,
+                });
             }
 
-            frameRef.current = requestAnimationFrame(tick);
-        };
+            comets.forEach((c, i) => {
+                c.x += c.vx;
+                c.y += c.vy;
+                c.life -= 0.01;
 
-        let isMounted = true;
-        let resizeObserver: ResizeObserver | null = null;
+                ctx!.shadowBlur = 10;
+                ctx!.shadowColor = "rgba(180,220,255,0.8)";
+                ctx!.strokeStyle = `rgba(200,230,255,${c.life})`;
+                ctx!.lineWidth = 2;
+                ctx!.beginPath();
+                ctx!.moveTo(c.x, c.y);
+                ctx!.lineTo(c.x - c.vx * 3, c.y - c.vy * 3);
+                ctx!.stroke();
 
-        const start = async () => {
-            let images: HTMLImageElement[] = [];
-            try {
-                images = await Promise.all(ICON_SOURCES.map(loadImage));
-            } catch {
-                images = [];
-            }
-            if (!isMounted || images.length === 0) return;
-            resizeCanvas();
-            spawnSprites(images);
-            resizeObserver = new ResizeObserver(() => resizeCanvas());
-            resizeObserver.observe(container);
-            window.addEventListener("pointerdown", onPointerDown);
-            window.addEventListener("pointermove", onPointerMove);
-            window.addEventListener("pointerup", onPointerUp);
-            window.addEventListener("pointercancel", onPointerUp);
-            frameRef.current = requestAnimationFrame(tick);
-        };
+                if (c.life <= 0) comets.splice(i, 1);
+            });
 
-        start();
+            particles.forEach((p) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                const twinkle = 0.3 + Math.sin(frame * 0.02 + p.phase) * 0.5;
+
+                ctx!.shadowBlur = 6;
+                ctx!.shadowColor = "rgba(255,255,255,0.6)";
+                ctx!.fillStyle = `rgba(200,220,255,${twinkle})`;
+                ctx!.beginPath();
+                ctx!.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx!.fill();
+
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+            });
+
+            ctx!.shadowBlur = 0;
+
+            const offset1 = Math.sin(frame * 0.002) * 10;
+            const offset2 = Math.sin(frame * 0.002 + 1) * 20;
+
+            ctx!.fillStyle = "#07080f";
+            ctx!.beginPath();
+            ctx!.moveTo(0, height);
+            ctx!.lineTo(0, height * 0.85);
+            ctx!.quadraticCurveTo(width * 0.3, height * 0.75 + offset1, width * 0.6, height * 0.85);
+            ctx!.quadraticCurveTo(width, height * 0.75 + offset1, width, height * 0.85);
+            ctx!.lineTo(width, height);
+            ctx!.fill();
+
+            ctx!.fillStyle = "#0c0d12";
+            ctx!.beginPath();
+            ctx!.moveTo(0, height);
+            ctx!.lineTo(0, height * 0.8);
+            ctx!.quadraticCurveTo(width * 0.3, height * 0.7 + offset2, width * 0.6, height * 0.8);
+            ctx!.quadraticCurveTo(width, height * 0.7 + offset2, width, height * 0.8);
+            ctx!.lineTo(width, height);
+            ctx!.fill();
+        }
+
+        function drawDay() {
+            const sky = ctx!.createLinearGradient(0, 0, 0, height);
+            sky.addColorStop(0, "#87ceeb");
+            sky.addColorStop(1, "#e0f7ff");
+            ctx!.fillStyle = sky;
+            ctx!.fillRect(0, 0, width, height);
+
+            particles.forEach((p) => {
+                p.x += p.vx * 0.5;
+                p.y += p.vy * 0.5;
+
+                const glow = 0.2 + Math.sin(frame * 0.02 + p.phase) * 0.3;
+
+                ctx!.fillStyle = `rgba(255,255,255,${glow})`;
+                ctx!.beginPath();
+                ctx!.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx!.fill();
+
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+            });
+
+            const offset1 = Math.sin(frame * 0.002) * 10;
+            const offset2 = Math.sin(frame * 0.002 + 1) * 20;
+
+            ctx!.fillStyle = "#14532d";
+            ctx!.beginPath();
+            ctx!.moveTo(0, height);
+            ctx!.lineTo(0, height * 0.85);
+            ctx!.quadraticCurveTo(width * 0.3, height * 0.75 + offset1, width * 0.6, height * 0.85);
+            ctx!.quadraticCurveTo(width, height * 0.75 + offset1, width, height * 0.85);
+            ctx!.lineTo(width, height);
+            ctx!.fill();
+
+            ctx!.fillStyle = "#22c55e";
+            ctx!.beginPath();
+            ctx!.moveTo(0, height);
+            ctx!.lineTo(0, height * 0.8);
+            ctx!.quadraticCurveTo(width * 0.3, height * 0.7 + offset2, width * 0.6, height * 0.8);
+            ctx!.quadraticCurveTo(width, height * 0.7 + offset2, width, height * 0.8);
+            ctx!.lineTo(width, height);
+            ctx!.fill();
+        }
+
+        function draw() {
+            if (isDarkRef.current) drawNight();
+            else drawDay();
+            frame++;
+            requestAnimationFrame(draw);
+        }
+
+        const resizeObserver = new ResizeObserver(() => init());
+        resizeObserver.observe(container);
+
+        init();
+        const animationId = requestAnimationFrame(draw);
 
         return () => {
-            isMounted = false;
-            if (resizeObserver) resizeObserver.disconnect();
-            window.removeEventListener("pointerdown", onPointerDown);
-            window.removeEventListener("pointermove", onPointerMove);
-            window.removeEventListener("pointerup", onPointerUp);
-            window.removeEventListener("pointercancel", onPointerUp);
-            if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+            resizeObserver.disconnect();
+            cancelAnimationFrame(animationId);
+            observer.disconnect();
         };
     }, []);
 
     return (
-        <div ref={containerRef} className="pointer-events-none fixed inset-0 z-30 h-full w-full overflow-hidden">
-            <canvas ref={canvasRef} className="block h-full w-full" />
+        <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden z-0">
+            <canvas ref={canvasRef} className="block w-full h-full" />
         </div>
     );
 }
 
-export default Canvas;
+export default Canvas;  

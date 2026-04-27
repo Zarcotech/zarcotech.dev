@@ -1,6 +1,5 @@
 'use client';
 import {GitHubCalendar} from 'react-github-calendar';
-import { styleText } from 'util';
 
 export default function Contributions() {
     const customTheme = {

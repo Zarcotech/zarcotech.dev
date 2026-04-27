@@ -2,7 +2,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./app/**/*.tsx'],
-  darkMode: 'class', // Use prefers-color-scheme media query
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
