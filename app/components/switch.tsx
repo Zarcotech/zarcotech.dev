@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-interface SwitchProps { onToggle?: (checked: boolean) => void; }
+interface SwitchProps { checked?: boolean; onToggle?: (checked: boolean) => void; }
 const Switch = ({ onToggle }: SwitchProps) => {
   const [checked, setChecked] = useState(false);
 

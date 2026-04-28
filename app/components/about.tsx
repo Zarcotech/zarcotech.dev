@@ -14,7 +14,7 @@ function About() {
 
   return (
     <div className="display-block">
-      <h1 className="text-[2rem] font-bold translate-x-6">Explore</h1>
+      <h1 className="text-[2rem] font-bold translate-x-6 select-none">Explore</h1>
       <div className="flex flex-row gap-4 p-4 z-1000">
         <div
           onClick={() => setOpen("about")}

@@ -23,7 +23,7 @@ function AboutPopup({ onClose }: Props) {
   
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-blue/50 backdrop-blur-[10px] transition-opacity duration-300"
+      className="fixed inset-0 z-[51] flex items-end justify-center bg-blue/50 backdrop-blur-[10px] transition-opacity duration-300"
       onClick={onClose}
     >
       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-max bg-blue-800 text-white text-xs rounded px-2 py-1">

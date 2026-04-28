@@ -3,190 +3,193 @@ import React, { useEffect, useRef } from 'react';
 
 class ObjectImage {
   img: HTMLImageElement;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  vx: number;
-  vy: number;
+  x: number; y: number; w: number; h: number;
+  vx: number; vy: number;
   isDragging: boolean;
-  friction: number;
-  bounce: number;
+  friction: number = 0.95; // Resistance to movement
+  bounce: number = -0.6;   // Energy retained after bounce (negative for direction)
 
   constructor(src: string, x: number, y: number, w: number, h: number) {
-    this.img = (typeof window !== 'undefined') ? new Image() : (null as any);
+    this.img = typeof window !== 'undefined' ? new Image() : (null as any);
     this.img.src = src;
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-    this.vx = 0;
-    this.vy = 0;
+    this.x = x; this.y = y; this.w = w; this.h = h;
+    this.vx = (Math.random() - 0.5) * 10;
+    this.vy = (Math.random() - 0.5) * 10;
     this.isDragging = false;
-    this.friction = 0.98;
-    this.bounce = -0.7;
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
+    if (this.img.complete && this.img.naturalWidth !== 0) {
+      ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
+    } else {
+      ctx.fillStyle = '#ccc';
+      ctx.fillRect(this.x, this.y, this.w, this.h);
+    }
   }
 
-  update(canvasWidth: number, canvasHeight: number): void {
+  update(width: number, height: number, obstacle: { x: number, y: number, w: number, h: number }): void {
     if (this.isDragging) return;
-
+    
+    // Apply velocity
     this.vx *= this.friction;
     this.vy *= this.friction;
-
+    
+    // Apply movement
     this.x += this.vx;
     this.y += this.vy;
+    
+    // Border Collision
+    if (this.x < 0) { this.x = 0; this.vx *= this.bounce; }
+    else if (this.x + this.w > width) { this.x = width - this.w; this.vx *= this.bounce; }
+    
+    if (this.y < 0) { this.y = 0; this.vy *= this.bounce; }
+    else if (this.y + this.h > height) { this.y = height - this.h; this.vy *= this.bounce; }
 
-    if (this.x <= 0) { this.x = 0; this.vx *= this.bounce; }
-    else if (this.x + this.w >= canvasWidth) { this.x = canvasWidth - this.w; this.vx *= this.bounce; }
-
-    if (this.y <= 0) { this.y = 0; this.vy *= this.bounce; }
-    else if (this.y + this.h >= canvasHeight) { this.y = canvasHeight - this.h; this.vy *= this.bounce; }
-  }
-
-  checkCollision(other: ObjectImage): void {
-    if (this.x < other.x + other.w &&
-        this.x + this.w > other.x &&
-        this.y < other.y + other.h &&
-        this.y + this.h > other.y) {
-
-      let tempVx = this.vx;
-      let tempVy = this.vy;
-      this.vx = other.vx * 0.8;
-      this.vy = other.vy * 0.8;
-      other.vx = tempVx * 0.8;
-      other.vy = tempVy * 0.8;
-
-      let overlapX = (this.w + other.w) / 2 - Math.abs((this.x + this.w / 2) - (other.x + other.w / 2));
-      let overlapY = (this.h + other.h) / 2 - Math.abs((this.y + this.h / 2) - (other.y + other.h / 2));
-
+    // Obstacle Collision (Basic AABB)
+    if (this.x < obstacle.x + obstacle.w && this.x + this.w > obstacle.x && 
+        this.y < obstacle.y + obstacle.h && this.y + this.h > obstacle.y) {
+      const overlapX = Math.min(this.x + this.w - obstacle.x, obstacle.x + obstacle.w - this.x);
+      const overlapY = Math.min(this.y + this.h - obstacle.y, obstacle.y + obstacle.h - this.y);
+      
       if (overlapX < overlapY) {
-        this.x += (this.x < other.x) ? -overlapX / 2 : overlapX / 2;
-        other.x += (this.x < other.x) ? overlapX / 2 : -overlapX / 2;
+        this.x = (this.x + this.w / 2 < obstacle.x + obstacle.w / 2) ? obstacle.x - this.w : obstacle.x + obstacle.w;
+        this.vx *= this.bounce;
       } else {
-        this.y += (this.y < other.y) ? -overlapY / 2 : overlapY / 2;
-        other.y += (this.y < other.y) ? overlapY / 2 : -overlapY / 2;
+        this.y = (this.y + this.h / 2 < obstacle.y + obstacle.h / 2) ? obstacle.y - this.h : obstacle.y + obstacle.h;
+        this.vy *= this.bounce;
       }
     }
   }
 
-  isClicked(mx: number, my: number): boolean {
-    return mx >= this.x && mx <= this.x + this.w &&
-           my >= this.y && my <= this.y + this.h;
+  resolveCollision(other: ObjectImage): void {
+    if (this.isDragging || other.isDragging) return;
+    const dx = (this.x + this.w / 2) - (other.x + other.w / 2);
+    const dy = (this.y + this.h / 2) - (other.y + other.h / 2);
+    const minX = (this.w + other.w) / 2;
+    const minY = (this.h + other.h) / 2;
+    const overlapX = minX - Math.abs(dx);
+    const overlapY = minY - Math.abs(dy);
+
+    if (overlapX > 0 && overlapY > 0) {
+      // Resolve position
+      if (overlapX < overlapY) {
+        const move = (dx > 0) ? overlapX / 2 : -overlapX / 2;
+        this.x += move; other.x -= move;
+      } else {
+        const move = (dy > 0) ? overlapY / 2 : -overlapY / 2;
+        this.y += move; other.y -= move;
+      }
+      // Simple momentum transfer
+      const tx = this.vx; const ty = this.vy;
+      this.vx = other.vx * 0.8; this.vy = other.vy * 0.8;
+      other.vx = tx * 0.8; other.vy = ty * 0.8;
+    }
   }
 }
 
 const Fiddle: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<ObjectImage[]>([]);
-
-  useEffect(() => {
-    if (imagesRef.current.length === 0) {
-      imagesRef.current = [
-        new ObjectImage('/icons/pfp.png', 50, 50, 40, 40),
-        new ObjectImage('/icons/pfp.png', 200, 50, 40, 40),
-        new ObjectImage('/icons/pfp.png', 350, 50, 40, 40),
-      ];
-    }
-  }, []);
-  const activeObjectRef = useRef<ObjectImage | null>(null);
-  const lastMouseRef = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
+  const activeObj = useRef<ObjectImage | null>(null);
+  const offset = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const resize = () => {
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+    };
+    
+    window.addEventListener('resize', resize);
+    resize();
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    let animationFrameId: number;
 
-    const animate = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+    const sources = ['/icons/html.png', '/icons/css.png', '/icons/js.png', '/icons/c++.png', '/icons/nextjs.png', '/icons/nodejs.png', '/icons/python.png', '/icons/react.png', '/icons/rust.png', '/icons/tkinter.png', '/icons/java.png'];
+    imagesRef.current = sources.map(src => new ObjectImage(src, Math.random() * (canvas.width - 100), Math.random() * (canvas.height - 100), 80, 80));
+
+    let raf: number;
+    const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+      const obstacle = { x: 10, y: canvas.height - 150, w: 200, h: 100 };
+      
+      // Collision checks
       for (let i = 0; i < imagesRef.current.length; i++) {
         for (let j = i + 1; j < imagesRef.current.length; j++) {
-          imagesRef.current[i].checkCollision(imagesRef.current[j]);
+          imagesRef.current[i].resolveCollision(imagesRef.current[j]);
         }
       }
-
+      
       imagesRef.current.forEach(img => {
-        img.update(canvas.width, canvas.height);
+        img.update(canvas.width, canvas.height, obstacle);
         img.draw(ctx);
       });
-      animationFrameId = requestAnimationFrame(animate);
+      raf = requestAnimationFrame(render);
+    };
+    render();
+
+    const getPos = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
 
-    animate();
-
-    const handleMouseDown = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-
+    const handleDown = (e: PointerEvent) => {
+      const pos = getPos(e);
       for (let i = imagesRef.current.length - 1; i >= 0; i--) {
-        if (imagesRef.current[i].isClicked(mx, my)) {
-          activeObjectRef.current = imagesRef.current[i];
-          activeObjectRef.current.isDragging = true;
-          activeObjectRef.current.vx = 0;
-          activeObjectRef.current.vy = 0;
-          lastMouseRef.current = { x: mx, y: my };
-
+        const img = imagesRef.current[i];
+        if (pos.x >= img.x && pos.x <= img.x + img.w && pos.y >= img.y && pos.y <= img.y + img.h) {
+          activeObj.current = img;
+          img.isDragging = true;
+          offset.current = { x: pos.x - img.x, y: pos.y - img.y };
+          // Move to end of array to draw on top
           imagesRef.current.splice(i, 1);
-          imagesRef.current.push(activeObjectRef.current);
-          break;
+          imagesRef.current.push(img);
+          return;
         }
       }
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!activeObjectRef.current) return;
-      const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
+    const handleMove = (e: PointerEvent) => {
+      if (!activeObj.current) return;
+      const pos = getPos(e);
+      const newX = pos.x - offset.current.x;
+      const newY = pos.y - offset.current.y;
 
-      activeObjectRef.current.vx = (mx - lastMouseRef.current.x) * 0.5;
-      activeObjectRef.current.vy = (my - lastMouseRef.current.y) * 0.5;
-      lastMouseRef.current = { x: mx, y: my };
+      // Calculate velocity for the "fling" effect
+      // By checking the difference between current frame and previous frame
+      activeObj.current.vx = (newX - activeObj.current.x) * 0.5;
+      activeObj.current.vy = (newY - activeObj.current.y) * 0.5;
 
-      activeObjectRef.current.x = mx - activeObjectRef.current.w / 2;
-      activeObjectRef.current.y = my - activeObjectRef.current.h / 2;
-
-      activeObjectRef.current.x = Math.max(0, Math.min(activeObjectRef.current.x, canvas.width - activeObjectRef.current.w));
-      activeObjectRef.current.y = Math.max(0, Math.min(activeObjectRef.current.y, canvas.height - activeObjectRef.current.h));
+      activeObj.current.x = newX;
+      activeObj.current.y = newY;
     };
 
-    const handleMouseUp = () => {
-      if (activeObjectRef.current) {
-        activeObjectRef.current.isDragging = false;
-        activeObjectRef.current = null;
-      }
+    const handleUp = () => {
+      if (activeObj.current) activeObj.current.isDragging = false;
+      activeObj.current = null;
     };
 
-    canvas.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('pointerdown', handleDown);
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleUp);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+      canvas.removeEventListener('pointerdown', handleDown);
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', handleUp);
     };
   }, []);
 
   return (
-    <div className="fixed inset-y-0 left-0 w-1/5 z-0 bg-gray-100 dark:bg-gray-800" style={{pointerEvents: 'auto'}}>
-      <canvas
-        ref={canvasRef}
-        width={800}
-        height={600}
-        className="block w-full h-full rounded-2xl border border-gray-300/70 bg-white/70 text-gray-900 shadow-xl backdrop-blur-sm dark:border-white/30 dark:bg-black/35 dark:text-white"
-        style={{ position: 'relative', zIndex: 10 }}
-      />
+    <div ref={containerRef} className="fixed inset-y-0 left-0 w-1/5 h-screen z-[9999] border-r border-blue-500 bg-blue-500/10 pointer-events-none">
+      <canvas ref={canvasRef} className="block w-full h-full pointer-events-auto" />
     </div>
   );
 };
