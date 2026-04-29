@@ -1,3 +1,5 @@
+import RandSong from "./randSong";
+
 function Info() {
   return (
     <div className="select-none w-[320px] rounded-2xl border border-gray-300/70 bg-white/70 p-4 text-gray-900 shadow-xl backdrop-blur-sm dark:border-white/30 dark:bg-black/35 dark:text-white z-50" style={{pointerEvents: 'none'}}>
@@ -13,6 +15,10 @@ function Info() {
       <p className="text-sm leading-relaxed text-gray-800 dark:text-white/90">
         Passionate about building impactful software and contributing to the open source community.
       </p>
+      <br /><br />
+      <h1 className="text-2xl font-bold leading-tight">Song of the Day:</h1>
+      <br />
+      <RandSong />
     </div>
   );
 }
