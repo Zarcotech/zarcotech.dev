@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-const { getTracks } = require("spotify-url-info")(fetch);
+const { getTracks, getData } = require("spotify-url-info")(fetch);
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -16,7 +16,9 @@ export async function GET(request: Request) {
       tracks.map(async (track: any) => {
         try {
           const artistNames =
-            track.artists?.map((a: any) => a.name).join(" ") || "";
+            track.artists?.map((a: any) => a.name).join(" ") ||
+            track.artist ||
+            "";
           const searchQuery = encodeURIComponent(
             `${track.name} ${artistNames}`,
           );
@@ -26,24 +28,85 @@ export async function GET(request: Request) {
           );
           const data = await response.json();
 
-          const metadata = Array.isArray(data) ? data[0] : data;
+          const metadata = Array.isArray(data) ? data[0] : data || {};
+          const albumNameFallback =
+            typeof track.album === "string"
+              ? track.album
+              : track.album?.name;
+          let albumImageFallback =
+            metadata?.album_pic ||
+            track.album?.images?.[0]?.url ||
+            track.images?.[0]?.url ||
+            track.album_pic ||
+            track.albumImage ||
+            null;
+
+          if (!albumImageFallback && track.uri) {
+            try {
+              const trackData = await getData(track.uri);
+              albumImageFallback =
+                trackData.visualIdentity?.image?.[0]?.url ||
+                trackData.image?.[0]?.url ||
+                null;
+            } catch {
+              // ignore track detail fallback failure
+            }
+          }
+
+          const albumName =
+            metadata?.album ||
+            metadata?.album_name ||
+            metadata?.albumName ||
+            albumNameFallback ||
+            track.name ||
+            track.title ||
+            "unknown";
 
           return {
-            name: metadata?.name || track.name,
+            name:
+              metadata?.name || track.name || track.title || "unknown",
             artists:
               metadata?.artist ||
               track.artists?.map((a: any) => a.name).join(", ") ||
+              track.artist ||
               "unknown",
-            albumName: metadata?.album || "unknown",
-            albumImage: metadata?.album_pic || null,
+            albumName,
+            albumImage: albumImageFallback,
           };
         } catch {
+          let albumImageFallback =
+            track.album?.images?.[0]?.url ||
+            track.images?.[0]?.url ||
+            track.album_pic ||
+            track.albumImage ||
+            null;
+
+          if (!albumImageFallback && track.uri) {
+            try {
+              const trackData = await getData(track.uri);
+              albumImageFallback =
+                trackData.visualIdentity?.image?.[0]?.url ||
+                trackData.image?.[0]?.url ||
+                null;
+            } catch {
+              // ignore track detail fallback failure
+            }
+          }
+
           return {
-            name: track.name,
+            name: track.name || track.title || "unknown",
             artists:
-              track.artists?.map((a: any) => a.name).join(", ") || "unknown",
-            albumName: "",
-            albumImage: null,
+              track.artists?.map((a: any) => a.name).join(", ") ||
+              track.artist ||
+              "unknown",
+            albumName:
+              typeof track.album === "string"
+                ? track.album
+                : track.album?.name ||
+              track.name ||
+              track.title ||
+              "unknown",
+            albumImage: albumImageFallback,
           };
         }
       }),

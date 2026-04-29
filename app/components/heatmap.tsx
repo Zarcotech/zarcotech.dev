@@ -1,5 +1,6 @@
 'use client';
 import {GitHubCalendar} from 'react-github-calendar';
+import Presence from './discordPresence';
 
 export default function Contributions() {
     const customTheme = {
@@ -10,6 +11,8 @@ export default function Contributions() {
     
     <div className="glow p-10">
       <GitHubCalendar username="Zarcotech" theme={customTheme}/>
+      <br /><br />
+      <Presence />
     </div>
   );
 }

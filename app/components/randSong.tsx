@@ -16,8 +16,20 @@ export default function RandSong() {
         const data = await response.json();
 
         if (data.tracks && data.tracks.length > 0) {
-          const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
-          setSong(data.tracks[dayOfYear % data.tracks.length]);
+          const today = new Date().toISOString().slice(0, 10);
+          const seed = `${playlistUrl}-${today}`;
+
+          const hashCode = (str: string) => {
+            let hash = 0;
+            for (let i = 0; i < str.length; i += 1) {
+              hash = (hash << 5) - hash + str.charCodeAt(i);
+              hash |= 0;
+            }
+            return hash;
+          };
+
+          const index = Math.abs(hashCode(seed)) % data.tracks.length;
+          setSong(data.tracks[index]);
         }
       } catch (error) {
         console.error(error);
